@@ -6,31 +6,56 @@
 		<script src="parse-authors-names.js"></script>
 		<script src="build-authors-names-list.js"></script>
 		<style>
-		.authorsNames, .buttons {margin-top: 20px;}
+		.authorsNames, .buttons {margin-top: 15px;}
 		.authorsNames span {font-weight: bold;}
-		.authorsNames input[type="text"] {width: 400px;padding: 10px;}
+		.authorsNames input[type="text"] {width: 400px;padding: 5px;}
 		</style>
 	</head>
 	<body>
 		<script>
-			function parseAuthorsNames(){
-				new AuthorsNamesListBuilder($("#authorsNames").val()).buildList("authorsNamesTable");
-				new AuthorsNamesListBuilder($("#editorsNames").val()).buildList("editorsNamesTable");
-				// ... здесь можно, например, отправить по Ajax имена авторов и получить списки идентификаторов
-				// пользователей системы, профилей авторов в базе данных и т.п.
+			// URL для поиска персон с указанными ФИО
+			var searchUrl = 'http://search/url' + '{lastname}/{firstname}/{middlename}';
+			var keyPersonId = 'user_id';
+			var keyPersonTitle = 'profile_display_name';
+			// парсер авторов
+			var authorsBuilder = new AuthorsNamesListBuilder({searchUrl: searchUrl, blockId: "authors", keyPersonId: keyPersonId, keyPersonTitle: keyPersonTitle});
+			// парсер редакторов
+			var editorsBuilder = new AuthorsNamesListBuilder({searchUrl: searchUrl, blockId: "editors", keyPersonId: keyPersonId, keyPersonTitle: keyPersonTitle});
+			
+			function parseAuthorsNames() {
+				// построение списка авторов
+				authorsBuilder.parseAuthorsNames($("#authorsNames").val())
+					.setTpl('<div><b>{lastname} {firstname} {middlename}</b> ' + 
+						'<input type="hidden" name="{blockId}[lastname][]" value="{lastname}"/>' + 
+						'<input type="hidden" name="{blockId}[firstname][]" value="{firstname}"/>' + 
+						'<input type="hidden" name="{blockId}[middlename][]" value="{middlename}"/>' + 
+						'<select name="{blockId}[person][]" id="{blockId}_{nameId}">' + 
+						'<option>не выбрано</option></select>' + 
+						'</div>')
+					.buildList("authorsNamesTable");
+				// построение списка редакторов
+				editorsBuilder.parseAuthorsNames($("#editorsNames").val())
+					.setTpl('<div><b><i>{lastname} {firstname} {middlename}</i></b> ' + 
+						'<input type="hidden" name="{blockId}[lastname][]" value="{lastname}"/>' + 
+						'<input type="hidden" name="{blockId}[firstname][]" value="{firstname}"/>' + 
+						'<input type="hidden" name="{blockId}[middlename][]" value="{middlename}"/>' + 
+						'<select name="{blockId}[person][]" id="{blockId}_{nameId}">' + 
+						'<option>не выбрано</option></select>' + 
+						'</div>')
+					.buildList("editorsNamesTable");
 			}
 			
 		</script>
 		
 		<div class="authorsNames">
-			<span>Authors names: </span><br/>
-			<input type="text" name="authorsNames" id="authorsNames" value="Тарасевич Ю.Ю. and    Зелепухина В.   А.   $  Бубенщикова И. , Рыбаков А.В."><br/>
+			<span>Авторы: </span><br/>
+			<input type="text" name="authorsNames" id="authorsNames" value="Тарасевич Ю.Ю. and    Зелепухина В.   А.   and  Бубенщикова И. and Рыбаков А.В."><br/>
 			<div id="authorsNamesTable"></div>
 		</div>
 		
 		<div class="authorsNames">
-			<span>Editors names: </span><br/>
-			<input type="text" name="editorsNames" id="editorsNames" value="ТАРАСЕВИЧ Ю.Ю."><br/>
+			<span>Редакторы: </span><br/>
+			<input type="text" name="editorsNames" id="editorsNames" value="Тарасевич Ю.Ю., Колегов К.С."><br/>
 			<div id="editorsNamesTable"></div>
 		</div>
 		

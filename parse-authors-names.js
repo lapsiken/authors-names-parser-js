@@ -1,51 +1,35 @@
-// Парсер имён авторов (публикаций и других объектов интеллектуальной собственности)
-// Используется формула Фамилия И.О.
 
 class AuthorsNamesParser {
 	
-	/**
-	 * конструктор класса
-	 */
-	constructor(authorsNamesStr) {
-		this.init();
-		this.parseAuthorsNames(authorsNamesStr);
-	}
-	
-	/**
-	 * установка переменных класса и очистка массивов
-	 */
-	init(){
-		this.isConsoleLog = false;
+	// params: 
+	// isConsoleLog - выводить ли ход и результат работы парсера в консоль
+	constructor(params) {
+		// выводить ли ход и результат работы парсера в консоль
+		this.isConsoleLog = params.isConsoleLog !== undefined ? params.isConsoleLog : false;
 		// "чистая" строка со списком авторов
 		this.authorsNamesStrClear = '';
-		// массив с каждым ФИО автора
-		this.authorsNamesArr = [];
 		// массив с ФИО для всех авторов
 		this.authorsNamesComponentsArr = [];
 		// регулярное выражение для разбиения ФИО автора на компоненты
 		this.authorNameRe = /(['a-zA-Zа-яА-ЯёЁéú-’\s]+)\s([a-zA-Zа-яА-ЯёЁéú]+)\.*\s*(?:([a-zA-Zа-яА-ЯёЁéú]+)\.)*/i;
 	}
 	
-	/**
-	 * передается строка с ФИО авторов
-	 */
+	// передается строка с ФИО авторов
 	parseAuthorsNames(authorsNamesStr) {
-		this.init();
-		this.authorsNamesArr = this.parseList(authorsNamesStr);
-		for (var i = 0; i < (this.authorsNamesArr.length); i++) { 
-			var tmpName = this.parseName(this.authorsNamesArr[i]);
+		this.authorsNamesComponentsArr = [];
+		var authorsNamesArr = this.parseList(authorsNamesStr);
+		for (var i = 0; i < (authorsNamesArr.length); i++) { 
+			var tmpName = this.parseName(authorsNamesArr[i]);
 			this.authorsNamesComponentsArr.push(tmpName);
 			if (this.isConsoleLog) {
-				console.log("=== " + this.authorsNamesArr[i] + " === \n");
+				console.log("=== " + authorsNamesArr[i] + " === \n");
 				console.log(tmpName);
 			}
 		}
-		return this.authorsNamesComponentsArr;
+		return this;
 	}
 	
-	/**
-	 * разбивает строку со списком авторов на несколько ФИО
-	 */
+	// разбивает строку со списком авторов на несколько ФИО
 	parseList(authorsNamesStr) {
 		// заменяем все разделители на запятую
 		authorsNamesStr = authorsNamesStr.replace(/\s+and\s+/gi, ", "); // FIO1 and FIO2
@@ -56,21 +40,19 @@ class AuthorsNamesParser {
 		authorsNamesStr = authorsNamesStr.replace(/(\.\s,)/gi, ".,");
 		authorsNamesStr = authorsNamesStr.replace(/(,\s+)/gi, ",");
 		// разбиваем строку на массив запятой
-		this.authorsNamesArr = authorsNamesStr.split(',');
+		var authorsNamesArr = authorsNamesStr.split(',');
 		this.authorsNamesStrClear = authorsNamesStr;
 		if (this.isConsoleLog) {
 			console.log("\n === " + this.authorsNamesStrClear + " === \n");
-			console.log(this.authorsNamesArr);
+			console.log(authorsNamesArr);
 		}
-		return this.authorsNamesArr;
+		return authorsNamesArr;
 	}
 	
-	/**
-	 * разбивает ФИО автора на отдельные элементы:
-	 * 	имя (first name)
-	 * 	отчество (middle name)
-	 * 	фамилия (last name)
-	 */
+	// Разбивает ФИО автора на отдельные элементы:
+	// - имя (first name)
+	// - отчество (middle name)
+	// - фамилия (last name)
 	parseName(authorName) {
 		var lastname = '';
 		var firstname = '';
@@ -86,4 +68,3 @@ class AuthorsNamesParser {
 		return {"lastname": lastname, "firstname": firstname, "middlename": middlename};
 	}
 }
-
