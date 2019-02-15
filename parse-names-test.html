@@ -6,9 +6,13 @@
 		<script src="parse-authors-names.js"></script>
 		<script src="build-authors-names-list.js"></script>
 		<style>
-		.authorsNames, .buttons {margin-top: 15px;}
-		.authorsNames span {font-weight: bold;}
-		.authorsNames input[type="text"] {width: 400px;padding: 5px;}
+		.authorsNames, .buttons, .authorsNames div {margin-top: 15px;}
+		.authorsNames input[type="text"] {width: 400px; padding: 2px;}
+		.build-authors-url-error {color: red; font-weight: normal !important;}
+		.lastname {margin-left: 10px; width: 100px !important;}
+		.firstname {margin-left: 10px; width: 20px !important;}
+		.middlename {margin-left: 10px; width: 20px !important;}
+		.fullname {color: green;}
 		</style>
 	</head>
 	<body>
@@ -18,24 +22,22 @@
 			var keyPersonId = 'user_id';
 			var keyPersonTitle = 'profile_display_name';
 			// парсер авторов
-			var authorsBuilder = new AuthorsNamesListBuilder({searchUrl: searchUrl, blockId: "authors", keyPersonId: keyPersonId, keyPersonTitle: keyPersonTitle});
+			var authorsBuilder = new AuthorsNamesListBuilder({/*searchUrl: searchUrl, */blockId: "authors", keyPersonId: keyPersonId, keyPersonTitle: keyPersonTitle});
 			// парсер редакторов
 			var editorsBuilder = new AuthorsNamesListBuilder({searchUrl: searchUrl, blockId: "editors", keyPersonId: keyPersonId, keyPersonTitle: keyPersonTitle});
 			
 			function parseAuthorsNames() {
 				// построение списка авторов
 				authorsBuilder.parseAuthorsNames($("#authorsNames").val())
-					.setTpl('<div><b>{lastname} {firstname} {middlename}</b> ' + 
-						'<input type="hidden" name="{blockId}[lastname][]" value="{lastname}"/>' + 
-						'<input type="hidden" name="{blockId}[firstname][]" value="{firstname}"/>' + 
-						'<input type="hidden" name="{blockId}[middlename][]" value="{middlename}"/>' + 
-						'<select name="{blockId}[person][]" id="{blockId}_{nameId}">' + 
-						'<option>не выбрано</option></select>' + 
+					.setTpl('<div><span class="fullname">{lastname} {firstname} {middlename}</span> ' + 
+						'<input type="text" name="{blockId}[lastname][]" value="{lastname}" class="lastname"/>' + 
+						'<input type="text" name="{blockId}[firstname][]" value="{firstname}" class="firstname"/>' + 
+						'<input type="text" name="{blockId}[middlename][]" value="{middlename}" class="middlename"/>' + 
 						'</div>')
 					.buildList("authorsNamesTable");
 				// построение списка редакторов
 				editorsBuilder.parseAuthorsNames($("#editorsNames").val())
-					.setTpl('<div><b><i>{lastname} {firstname} {middlename}</i></b> ' + 
+					.setTpl('<div><span class="fullname">{lastname} {firstname} {middlename}</span> ' + 
 						'<input type="hidden" name="{blockId}[lastname][]" value="{lastname}"/>' + 
 						'<input type="hidden" name="{blockId}[firstname][]" value="{firstname}"/>' + 
 						'<input type="hidden" name="{blockId}[middlename][]" value="{middlename}"/>' + 
@@ -55,7 +57,7 @@
 		
 		<div class="authorsNames">
 			<span>Редакторы: </span><br/>
-			<input type="text" name="editorsNames" id="editorsNames" value="Тарасевич Ю.Ю., Колегов К.С."><br/>
+			<input type="text" name="editorsNames" id="editorsNames" value="Tarasevich Yu.Yu., kolegov K.S."><br/>
 			<div id="editorsNamesTable"></div>
 		</div>
 		
