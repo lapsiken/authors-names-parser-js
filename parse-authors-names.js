@@ -42,6 +42,7 @@ class AuthorsNamesParser {
 		// разбиваем строку на массив запятой
 		var authorsNamesArr = authorsNamesStr.split(',');
 		this.authorsNamesStrClear = authorsNamesStr;
+		this.authorsNamesStrClear = this.authorsNamesStrClear.replace(/,/gi, ", ");
 		if (this.isConsoleLog) {
 			console.log("\n === " + this.authorsNamesStrClear + " === \n");
 			console.log(authorsNamesArr);

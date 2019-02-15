@@ -8,6 +8,7 @@ class AuthorsNamesListBuilder extends AuthorsNamesParser {
 	// searchUrl - URL для поиска данных персон с указанными ФИО
 	// keyPersonTitle -- в каком параметре из JSON-ответа, полученного из searchUrl, содержатся данные для отображения на странице 
 	// keyPersonId --  в каком параметре из JSON-ответа, полученного из searchUrl, содержатся данные с идентфикаторами соответствующих ФИО персон 
+	// fullnameSelector -- селектор для указания елементов, в которые вставлять "чистую" строку со списком ФИО
 	constructor(params) {
 		super(params);
 		var authorsNamesListTplDefault = 
@@ -24,6 +25,7 @@ class AuthorsNamesListBuilder extends AuthorsNamesParser {
 		this.keyPersonTitle = params.keyPersonTitle !== undefined ? params.keyPersonTitle : "profile_display_name";
 		this.keyPersonId = params.keyPersonId !== undefined ? params.keyPersonId : "id";
 		this.buildAuthorsUrlErrorMsg = params.buildAuthorsUrlErrorMsg !== undefined ? params.buildAuthorsUrlErrorMsg : "<span class=\"build-authors-url-error\">" + "URL не доступен" + "</span>";
+		this.fullnameSelector = params.fullnameSelector !== undefined ? params.fullnameSelector : null;
 	}
 	
 	// установка шаблона для вывода данных по ФИО
@@ -108,6 +110,9 @@ class AuthorsNamesListBuilder extends AuthorsNamesParser {
 					});
 				}
 			});
+		}
+		if (this.fullnameSelector !== undefined && this.fullnameSelector != null) {
+			$(this.fullnameSelector).val(this.authorsNamesStrClear);
 		}
 	}
 	

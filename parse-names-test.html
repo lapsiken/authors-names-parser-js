@@ -22,9 +22,9 @@
 			var keyPersonId = 'user_id';
 			var keyPersonTitle = 'profile_display_name';
 			// парсер авторов
-			var authorsBuilder = new AuthorsNamesListBuilder({/*searchUrl: searchUrl, */blockId: "authors", keyPersonId: keyPersonId, keyPersonTitle: keyPersonTitle});
+			var authorsBuilder = new AuthorsNamesListBuilder({blockId: "authors", fullnameSelector: "#authorsNames"});
 			// парсер редакторов
-			var editorsBuilder = new AuthorsNamesListBuilder({searchUrl: searchUrl, blockId: "editors", keyPersonId: keyPersonId, keyPersonTitle: keyPersonTitle});
+			var editorsBuilder = new AuthorsNamesListBuilder({searchUrl: searchUrl, blockId: "editors", keyPersonId: keyPersonId, keyPersonTitle: keyPersonTitle, fullnameSelector: "#editorsNames"});
 			
 			function parseAuthorsNames() {
 				// построение списка авторов
@@ -32,8 +32,7 @@
 					.setTpl('<div><span class="fullname">{lastname} {firstname} {middlename}</span> ' + 
 						'<input type="text" name="{blockId}[lastname][]" value="{lastname}" class="lastname"/>' + 
 						'<input type="text" name="{blockId}[firstname][]" value="{firstname}" class="firstname"/>' + 
-						'<input type="text" name="{blockId}[middlename][]" value="{middlename}" class="middlename"/>' + 
-						'</div>')
+						'<input type="text" name="{blockId}[middlename][]" value="{middlename}" class="middlename"/>' + '</div>')
 					.buildList("authorsNamesTable");
 				// построение списка редакторов
 				editorsBuilder.parseAuthorsNames($("#editorsNames").val())
