@@ -106,7 +106,9 @@ class AuthorsNamesListBuilder extends AuthorsNamesParser {
 				}
 				else {
 					$.each(persons, function(i2, person) {
-						$("#" + i1).append("<option value=\"" + person[self.keyPersonId] + "\">" + person[self.keyPersonTitle] + "</option>");
+						if (person[self.keyPersonId] !== undefined && person[self.keyPersonTitle] !== undefined) {
+							$("#" + i1).append("<option value=\"" + person[self.keyPersonId] + "\">" + person[self.keyPersonTitle] + "</option>");
+						}
 					});
 				}
 			});
